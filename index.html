@@ -1701,7 +1701,7 @@
             //     document.getElementById('simResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
             // }, 200);
 
-           renderSimResults();
+          renderSimResults();
 document.getElementById('simResults').classList.add('visible');
 
 // force chart redraw after element is visible and has size
@@ -1710,6 +1710,12 @@ setTimeout(() => {
     document.getElementById('simResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }, 100);
         runAISimulation();
+
+        // Track total simulations run (not just saved)
+        var runCount = parseInt(localStorage.getItem('vl_sim_count') || '0') + 1;
+        localStorage.setItem('vl_sim_count', runCount);
+        var dSims = document.getElementById('d-sims');
+        if (dSims) dSims.textContent = runCount;
         }
 
         async function runAISimulation() {
@@ -1819,8 +1825,8 @@ Give a short, sharp 3-4 sentence analysis of these results. Highlight the bigges
 
         function saveCurrentSim() {
             if (!simData) return;
-            const sims = JSON.parse(localStorage.getItem('vl_sims') || '[]');
-            const entry = {
+            var sims = JSON.parse(localStorage.getItem('vl_sims') || '[]');
+            var entry = {
                 id: Date.now(),
                 label: simData.label,
                 mode: simData.mode,
@@ -1835,6 +1841,10 @@ Give a short, sharp 3-4 sentence analysis of these results. Highlight the bigges
             showToast('Simulation saved! 💾');
             renderSavedSims();
             addActivity('Saved simulation: ' + simData.label, '💾');
+
+            // Update simulation count on dashboard instantly
+            var dSims = document.getElementById('d-sims');
+            if (dSims) dSims.textContent = sims.length;
         }
 
         function renderSavedSims() {
@@ -1919,10 +1929,39 @@ Give a short, sharp 3-4 sentence analysis of these results. Highlight the bigges
         }
 
         function saveTrackerData() {
+            // Save data to browser storage
             localStorage.setItem('vl_tracker', JSON.stringify(trackerMonths));
+
+            // Re-render the table rows first so the canvas is visible and has size
+            renderTracker();
+            updateAnalyticsKPIs();
+
+            // Wait a moment for the canvas to get its size then draw the chart
+            setTimeout(function() {
+                updateAnalyticsChart();
+            }, 50);
+
+            // Update dashboard cards with latest month data
+            var months = trackerMonths;
+            if (months.length > 0) {
+                var last   = months[months.length - 1];
+                var profit = last.revenue - last.cost;
+                var margin = last.revenue > 0 ? ((profit / last.revenue) * 100).toFixed(1) : 0;
+                var dRev    = document.getElementById('d-rev');
+                var dProfit = document.getElementById('d-profit');
+                var dMargin = document.getElementById('d-margin');
+                if (dRev)    dRev.textContent    = fmtK(last.revenue);
+                if (dProfit) dProfit.textContent  = fmtK(profit);
+                if (dMargin) dMargin.textContent  = margin + '%';
+            }
+
+            // Update simulation run count on dashboard
+            var runCount = localStorage.getItem('vl_sim_count') || '0';
+            var dSims = document.getElementById('d-sims');
+            if (dSims) dSims.textContent = runCount;
+
             showToast('Analytics data saved! 💾');
         }
-
         function clearTrackerData() {
             if (!confirm('Clear all monthly data? This cannot be undone.')) return;
             trackerMonths = [];
@@ -1973,30 +2012,41 @@ Give a short, sharp 3-4 sentence analysis of these results. Highlight the bigges
         }
 
 
-        function updateAnalyticsChart() {
-    const canvas = document.getElementById('analyticsChart');
-    const emptyState = document.getElementById('analyticsChartEmpty');
-    const legend = document.getElementById('analyticsChartLegend');
-    if (!canvas) return;
-    if (!trackerMonths.length) {
-        canvas.style.display = 'none';
-        emptyState.style.display = 'flex';
-        legend.style.display = 'none';
-        return;
-    }
-    canvas.style.display = 'block';
-    emptyState.style.display = 'none';
-    legend.style.display = 'flex';
-    const labels = trackerMonths.map(r => r.month.replace(' 2026', '').replace(' 2025', ''));
-    const revData = trackerMonths.map(r => r.revenue);
-    const costData = trackerMonths.map(r => r.cost);
-    const profData = trackerMonths.map(r => r.revenue - r.cost);
-    drawLineChart('analyticsChart', [
-        { data: revData, color: '#3b82f6' },
-        { data: costData, color: '#a855f7' },
-        { data: profData, color: '#10b981' }
-    ], labels);
-}
+       function updateAnalyticsChart() {
+            var canvas = document.getElementById('analyticsChart');
+            var emptyState = document.getElementById('analyticsChartEmpty');
+            var legend = document.getElementById('analyticsChartLegend');
+            if (!canvas) return;
+
+            if (!trackerMonths.length) {
+                canvas.style.display = 'none';
+                emptyState.style.display = 'flex';
+                legend.style.display = 'none';
+                return;
+            }
+
+            canvas.style.display = 'block';
+            emptyState.style.display = 'none';
+            legend.style.display = 'flex';
+
+            // If container has no width yet, wait for layout and retry
+            var container = canvas.parentElement;
+            if (!container || container.clientWidth === 0) {
+                setTimeout(updateAnalyticsChart, 100);
+                return;
+            }
+
+            var labels   = trackerMonths.map(function(r) { return r.month.replace(' 2026','').replace(' 2025',''); });
+            var revData  = trackerMonths.map(function(r) { return r.revenue; });
+            var costData = trackerMonths.map(function(r) { return r.cost; });
+            var profData = trackerMonths.map(function(r) { return r.revenue - r.cost; });
+
+            drawLineChart('analyticsChart', [
+                { data: revData,  color: '#3b82f6' },
+                { data: costData, color: '#a855f7' },
+                { data: profData, color: '#10b981', negColor: '#ef4444' }
+            ], labels);
+        }
 
         function updateAnalytics() {
             const revEl = document.getElementById('revInput'), costEl = document.getElementById('costInput');
@@ -2141,7 +2191,7 @@ Give a short, sharp 3-4 sentence analysis of these results. Highlight the bigges
                 document.getElementById('d-profit').parentElement.parentElement.querySelector('.dash-card-val').style.color =
                     profit >= 0 ? '#10b981' : '#8b5cf6';
             }
-            document.getElementById('d-sims').textContent = sims.length;
+            document.getElementById('d-sims').textContent = localStorage.getItem('vl_sim_count') || '0';
 
             // Dashboard chart
 const canvas = document.getElementById('dashChart');
