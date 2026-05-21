@@ -1380,10 +1380,15 @@
             setTimeout(() => el.remove(), 700);
         }
 
-        function navigate(page, event) {
-            if (event) spawnNavBubble(event.clientX, event.clientY);
-            // if (!PAGES.includes(page)) page = 'home';
+        var PUBLIC_PAGES = ['home', 'auth', 'features', 'about', 'contact'];
+
+        function navigate(page) {
             if (!PAGES.includes(page)) page = 'home';
+
+            if (!checkAuth() && !PUBLIC_PAGES.includes(page)) {
+                showToast('Please log in to access that page. 🔒');
+                page = 'auth';
+            }
             const vbg = document.getElementById('videoBg');
             if (vbg) {
                 if (page === 'home') vbg.classList.remove('show-other');
