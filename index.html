@@ -28,11 +28,26 @@
     <div class="glow-orb" style="bottom:10%;right:10%;background:var(--b)"></div>
 
     <!-- NAVBAR -->
+    <!-- MOBILE NAV DRAWER -->
+    <div class="mobile-nav" id="mobileNav">
+        <a onclick="mobileGo('home')">Home</a>
+        <a onclick="mobileGo('dashboard')">📊 Dashboard</a>
+        <a onclick="mobileGo('simulation')">Simulation</a>
+        <a onclick="mobileGo('analytics')">Analytics</a>
+        <a onclick="mobileGo('features')">Features</a>
+        <a onclick="mobileGo('about')">About</a>
+        <a onclick="mobileGo('contact')">Contact</a>
+    </div>
+
+    <!-- NAVBAR -->
     <nav>
         <a class="logo-wrap" onclick="navigate('home');return false;" href="#">
             <span class="logo-text">Velocity Labs</span>
             <span class="logo-tagline">Revenue · Growth · AI Strategy</span>
         </a>
+        <button class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+            <span></span><span></span><span></span>
+        </button>
         <div class="nav-links">
             <a data-page="home" onclick="navigate('home',event)">Home</a>
             <a data-page="dashboard" onclick="navigate('dashboard',event)" class="nav-dash" id="dashLink">📊 Dashboard</a>
@@ -1378,6 +1393,20 @@
             el.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;background:radial-gradient(circle, ${color}, transparent 70%);`;
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 700);
+        }
+
+        // Mobile nav toggle
+        function toggleMobileNav() {
+            var nav = document.getElementById('mobileNav');
+            var btn = document.getElementById('hamburger');
+            nav.classList.toggle('open');
+            btn.classList.toggle('open');
+        }
+
+        // Navigate from mobile nav and close the drawer
+        function mobileGo(page) {
+            toggleMobileNav();
+            navigate(page);
         }
 
         var PUBLIC_PAGES = ['home', 'auth', 'features', 'about', 'contact'];
