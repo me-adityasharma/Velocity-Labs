@@ -28,26 +28,11 @@
     <div class="glow-orb" style="bottom:10%;right:10%;background:var(--b)"></div>
 
     <!-- NAVBAR -->
-    <!-- MOBILE NAV DRAWER -->
-    <div class="mobile-nav" id="mobileNav">
-        <a onclick="mobileGo('home')">Home</a>
-        <a onclick="mobileGo('dashboard')">📊 Dashboard</a>
-        <a onclick="mobileGo('simulation')">Simulation</a>
-        <a onclick="mobileGo('analytics')">Analytics</a>
-        <a onclick="mobileGo('features')">Features</a>
-        <a onclick="mobileGo('about')">About</a>
-        <a onclick="mobileGo('contact')">Contact</a>
-    </div>
-
-    <!-- NAVBAR -->
     <nav>
         <a class="logo-wrap" onclick="navigate('home');return false;" href="#">
             <span class="logo-text">Velocity Labs</span>
             <span class="logo-tagline">Revenue · Growth · AI Strategy</span>
         </a>
-        <button class="hamburger" id="hamburger" onclick="toggleMobileNav()">
-            <span></span><span></span><span></span>
-        </button>
         <div class="nav-links">
             <a data-page="home" onclick="navigate('home',event)">Home</a>
             <a data-page="dashboard" onclick="navigate('dashboard',event)" class="nav-dash" id="dashLink">📊 Dashboard</a>
@@ -59,6 +44,10 @@
         </div>
         <div class="nav-right">
             <span class="user-badge" id="userBadge">👤 <span id="userNameDisp"></span></span>
+            <div class="currency-switch" id="currencySwitch">
+                <span class="cur-opt active" id="cur-usd" onclick="setCurrency('usd')">$ USD</span>
+                <span class="cur-opt" id="cur-inr" onclick="setCurrency('inr')">₹ INR</span>
+            </div>
 <button class="btn btn-premium-nav btn" id="premiumNavBtn" onclick="openPremiumModal()">⚡ Premium</button>
 <button class="btn btn-primary" style="padding:9px 20px;font-size:.82rem" id="authNavBtn" onclick="navigate('auth')">Sign In</button>
 <button class="logout-btn" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
@@ -140,7 +129,7 @@
                         <li><span class="icon yes">✓</span> 5 templates / month</li>
                         <li><span class="icon yes">✓</span> Analytics dashboard</li>
                         <li><span class="icon no">✕</span> Smart revenue optimization</li>
-                        <li><span class="icon no">✕</span> AI insights (Claude-powered)</li>
+                        <li><span class="icon no">✕</span> AI insights</li>
                         <li><span class="icon no">✕</span> Priority support</li>
                         <li><span class="icon no">✕</span> Export & save simulations</li>
                     </ul>
@@ -157,7 +146,7 @@
                         <li><span class="icon yes">✓</span> Full analytics suite</li>
                         <li><span class="icon yes">✓</span> Smart revenue opt. <strong style="color:var(--g)">(+1.5%
                                 lift)</strong></li>
-                        <li><span class="icon yes">✓</span> AI insights powered by Claude</li>
+                        <li><span class="icon yes">✓</span> Better AI insights</li>
                         <li><span class="icon yes">✓</span> 24/7 priority support</li>
                         <li><span class="icon yes">✓</span> Export & save unlimited sims</li>
                     </ul>
@@ -351,7 +340,7 @@
                         <ul class="s3d-list">
                             <li>12-month revenue projections across 3 scenarios</li>
                             <li>Monthly breakdown with growth rate tracking</li>
-                            <li>Claude AI gives personalized insights (with API key)</li>
+                            <li>AI gives personalized insights (with API key)</li>
                         </ul>
                         <span class="s3d-link" onclick="navigate('simulation')">See a live simulation →</span>
                     </div>
@@ -412,7 +401,7 @@
                     <div class="s3d-text-col">
                         <div class="s3d-pill green">Step 03 — Execute</div>
                         <h2 class="s3d-title">Get a prioritized<br>90-day growth roadmap</h2>
-                        <p class="s3d-desc">No vague advice. Claude AI gives you a prioritized action plan with weekly
+                        <p class="s3d-desc">No vague advice.AI gives you a prioritized action plan with weekly
                             milestones, specific to your numbers and industry.</p>
                         <ul class="s3d-list">
                             <li>Top 3 high-leverage growth actions, ranked by ROI</li>
@@ -745,8 +734,8 @@
 
             <!-- SIMULATION RESULTS -->
             <div class="sim-results" id="simResults">
-            <div id="aiInsightBox" style="display:none;margin-bottom:24px;padding:24px 28px;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:18px;">
-            </div>
+            <!-- Claude AI simulation insight loads here after running a simulation -->
+            <div id="aiInsightBox" style="display:none;margin-bottom:24px;padding:24px 28px;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:18px;"></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
                     <h2 style="font-family:'Sora';font-size:1.5rem;">📊 Simulation Results</h2>
                     <div style="display:flex;gap:10px;">
@@ -840,6 +829,9 @@
      PAGE: ANALYTICS
 ══════════════════════════════════════ -->
     <div id="page-analytics" class="page">
+        <div id="analyticsAIBox" style="display:none;margin:24px 24px 0;padding:22px 24px;background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:16px;">
+            <!-- Claude AI analytics insight loads here -->
+        </div>
         <div class="page-hero">
             <span class="badge"
                 style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:var(--b);">Analytics
@@ -1073,7 +1065,7 @@
         <div class="dash-main">
             <div class="dash-chart-box glass">
     <h3>📊 Revenue & Profit Trend</h3>
-    <canvas id="dashChart" style="height:250px"></canvas>
+    <canvas id="dashChart" style="height:320px;width:100%"></canvas>
     <div id="dashChartEmpty" style="display:none;height:250px;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
         <div style="font-size:3rem;">📈</div>
         <div style="font-family:'Sora';font-size:1.1rem;color:white;">No data yet</div>
@@ -1097,6 +1089,7 @@
                 <div class="glass" style="padding:24px;">
                     <h3 style="font-family:'Sora';font-size:1.05rem;margin-bottom:16px;">💡 Quick Tips</h3>
                     <div style="font-size:.85rem;color:var(--td);line-height:1.8;" id="dashTips">Loading tips...</div>
+                    <div id="dashAIBox" style="display:none;margin-top:16px;padding:18px 20px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:14px;"></div>
                 </div>
             </div>
         </div>
@@ -1164,7 +1157,7 @@
                 <div class="feature-detail-card glass reveal">
                     <div style="font-size:2.2rem;">🔮</div>
                     <h3>AI-Powered Insights</h3>
-                    <p>Connect your Anthropic API key to unlock Claude-powered analysis — personalized growth
+                    <p> AI-powered analysis — personalized growth
                         strategies, financial recommendations, and competitive analysis on demand.</p><span
                         class="feature-tag tag-green">AI</span>
                 </div>
@@ -1374,12 +1367,11 @@
         // ══════════════════════════════════════════════
         // GLOBALS
         // ══════════════════════════════════════════════
-        // const PAGES = ['home', 'simulation', 'analytics', 'dashboard', 'features', 'about', 'contact', 'auth'];
         const PAGES = ['home', 'simulation', 'analytics', 'dashboard', 'features', 'about', 'contact', 'auth', 'payment'];
         let currentPage = 'home';
         let currentSimMode = 'startup';
         let currentScenario = 'base';
-        let simData = null; // current simulation results
+        let simData = null;
 
         // ══════════════════════════════════════════════
         // ROUTING
@@ -1395,23 +1387,10 @@
             setTimeout(() => el.remove(), 700);
         }
 
-        // Mobile nav toggle
-        function toggleMobileNav() {
-            var nav = document.getElementById('mobileNav');
-            var btn = document.getElementById('hamburger');
-            nav.classList.toggle('open');
-            btn.classList.toggle('open');
-        }
-
-        // Navigate from mobile nav and close the drawer
-        function mobileGo(page) {
-            toggleMobileNav();
-            navigate(page);
-        }
-
         var PUBLIC_PAGES = ['home', 'auth', 'features', 'about', 'contact'];
 
-        function navigate(page) {
+        function navigate(page, event) {
+            if (event) spawnNavBubble(event.clientX, event.clientY);
             if (!PAGES.includes(page)) page = 'home';
 
             if (!checkAuth() && !PUBLIC_PAGES.includes(page)) {
@@ -1460,7 +1439,6 @@
         // ══════════════════════════════════════════════
         function checkAuth() { try { return JSON.parse(localStorage.getItem('vl_session')); } catch { return null; } }
         function setAuth(user) { localStorage.setItem('vl_session', JSON.stringify(user)); updateNavAuth(); }
-        // function logout() { localStorage.removeItem('vl_session'); updateNavAuth(); showToast('Logged out successfully.'); navigate('home'); }
 
         function logout() {
     if (!confirm('Are you sure you want to logout?')) return;
@@ -1471,14 +1449,23 @@
 }   
 
         function updateNavAuth() {
-    const user = checkAuth();
-    document.getElementById('userBadge').classList.toggle('visible', !!user);
-    if (user) document.getElementById('userNameDisp').textContent = user.name || user.email.split('@')[0];
-    document.getElementById('authNavBtn').style.display = user ? 'none' : 'inline-block';
-    document.getElementById('logoutBtn').style.display = user ? 'inline-block' : 'none';
-    const dashLink = document.getElementById('dashLink');
-    if (dashLink) dashLink.classList.toggle('visible', !!user);
-}
+            var user = checkAuth();
+            document.getElementById('userBadge').classList.toggle('visible', !!user);
+            if (user) document.getElementById('userNameDisp').textContent = user.name || user.email.split('@')[0];
+            document.getElementById('authNavBtn').style.display = user ? 'none' : 'inline-block';
+            document.getElementById('logoutBtn').style.display = user ? 'inline-block' : 'none';
+            var dashLink = document.getElementById('dashLink');
+            if (dashLink) dashLink.classList.toggle('visible', !!user);
+
+            // Show currency switcher only when logged in
+            var cs = document.getElementById('currencySwitch');
+            if (cs) {
+                cs.classList.toggle('visible', !!user);
+                // Restore saved currency preference
+                document.getElementById('cur-usd').classList.toggle('active', currentCurrency === 'usd');
+                document.getElementById('cur-inr').classList.toggle('active', currentCurrency === 'inr');
+            }
+        }
 
         function switchAuth(mode) {
             const isLogin = mode === 'login';
@@ -1487,20 +1474,21 @@
             document.getElementById('loginForm').classList.toggle('active', isLogin);
             document.getElementById('signupForm').classList.toggle('active', !isLogin);
         }
-        function doLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const pass = document.getElementById('loginPassword').value;
-            const err = document.getElementById('loginError');
-            err.classList.remove('visible');
-            if (!email || !pass) { err.textContent = 'Please fill in all fields.'; err.classList.add('visible'); return; }
-            const users = JSON.parse(localStorage.getItem('vl_users') || '[]');
-            const match = users.find(u => u.email === email && u.password === pass);
-            if (!match) { err.textContent = 'Invalid email or password.'; err.classList.add('visible'); return; }
+        async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+    const err = document.getElementById('loginError');
+    err.classList.remove('visible');
+    if (!email || !pass) { err.textContent = 'Please fill in all fields.'; err.classList.add('visible'); return; }
+    const hashed = await hashPassword(pass);
+    const users = JSON.parse(localStorage.getItem('vl_users') || '[]');
+    const match = users.find(u => u.email === email && u.password === hashed);
+    if (!match) { err.textContent = 'Invalid email or password.'; err.classList.add('visible'); return; }
             setAuth({ email: match.email, name: match.name });
             showToast('Welcome back, ' + (match.name || match.email.split('@')[0]) + '! 🚀');
             navigate('dashboard');
         }
-        function doSignup() {
+        async function doSignup() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
             const pass = document.getElementById('signupPassword').value;
@@ -1511,8 +1499,12 @@
             if (!/\S+@\S+\.\S+/.test(email)) { err.textContent = 'Please enter a valid email.'; err.classList.add('visible'); return; }
             const users = JSON.parse(localStorage.getItem('vl_users') || '[]');
             if (users.find(u => u.email === email)) { err.textContent = 'Email already registered.'; err.classList.add('visible'); return; }
-            users.push({ name, email, password: pass });
-            localStorage.setItem('vl_users', JSON.stringify(users));
+            // Simple hash using SubtleCrypto (built into every browser, no library needed)
+async function hashPassword(pass) {
+    const enc = new TextEncoder();
+    const buf = await crypto.subtle.digest('SHA-256', enc.encode(pass));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
             setAuth({ email, name });
             showToast('Account created! Welcome, ' + name + '! 🎉');
             navigate('dashboard');
@@ -1528,12 +1520,38 @@
                 navigate('auth');
             }
         }
-        // function closeOverlay() { document.getElementById('protectedOverlay').classList.remove('visible'); }
 
         // ══════════════════════════════════════════════
         // CANVAS CHART ENGINE
         // ══════════════════════════════════════════════
+        // Currency setting — loads from localStorage so it persists
+        var currentCurrency = localStorage.getItem('vl_currency') || 'usd';
+        var USD_TO_INR = 83.5;
+
+        function setCurrency(cur) {
+            currentCurrency = cur;
+            localStorage.setItem('vl_currency', cur);
+
+            // Update switcher button UI
+            document.getElementById('cur-usd').classList.toggle('active', cur === 'usd');
+            document.getElementById('cur-inr').classList.toggle('active', cur === 'inr');
+
+            // Refresh all pages that show money values
+            updateAnalyticsKPIs();
+            if (currentPage === 'simulation' && simData) renderSimResults();
+            if (currentPage === 'dashboard') initDashboard();
+            if (currentPage === 'analytics') updateAnalyticsChart();
+            showToast(cur === 'inr' ? 'Currency switched to ₹ INR' : 'Currency switched to $ USD');
+        }
+
         function fmtK(n) {
+            if (currentCurrency === 'inr') {
+                var r = n * USD_TO_INR;
+                if (r >= 1e7) return '₹' + (r / 1e7).toFixed(1) + 'Cr';
+                if (r >= 1e5) return '₹' + (r / 1e5).toFixed(1) + 'L';
+                if (r >= 1e3) return '₹' + (r / 1e3).toFixed(0) + 'k';
+                return '₹' + Math.round(r);
+            }
             if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
             if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'k';
             return '$' + Math.round(n);
@@ -1545,46 +1563,84 @@
         }
 
         function drawLineChart(canvasId, datasets, labels) {
-            const canvas = document.getElementById(canvasId);
+            var canvas = document.getElementById(canvasId);
             if (!canvas) return;
-            const container = canvas.parentElement;
-            const cssW = container.clientWidth - 56; // account for padding
-            const cssH = parseInt(canvas.style.height) || 260;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = cssW * dpr;
+            var container = canvas.parentElement;
+            if (!container || container.clientWidth === 0) {
+                setTimeout(function() { drawLineChart(canvasId, datasets, labels); }, 100);
+                return;
+            }
+            var cssW = container.clientWidth - 56;
+            var cssH = parseInt(canvas.style.height) || 260;
+            var dpr  = window.devicePixelRatio || 1;
+            canvas.width  = cssW * dpr;
             canvas.height = cssH * dpr;
-            canvas.style.width = cssW + 'px';
+            canvas.style.width  = cssW + 'px';
             canvas.style.height = cssH + 'px';
-            const ctx = canvas.getContext('2d');
+            var ctx = canvas.getContext('2d');
             ctx.scale(dpr, dpr);
-            const W = cssW, H = cssH;
-            const pad = { top: 24, right: 20, bottom: 44, left: 64 };
+            var W = cssW, H = cssH;
+            var pad = { top: 24, right: 20, bottom: 44, left: 64 };
             ctx.clearRect(0, 0, W, H);
 
-            const allVals = datasets.flatMap(d => d.data.filter(v => v != null));
-            const maxVal = Math.max(...allVals, 1) * 1.12;
-            const chartW = W - pad.left - pad.right;
-            const chartH = H - pad.top - pad.bottom;
+            // get min and max across ALL datasets
+            var allVals = [];
+            datasets.forEach(function(d) {
+                d.data.forEach(function(v) { if (v != null) allVals.push(v); });
+            });
+            var maxVal = Math.max.apply(null, allVals.concat([1]))  * 1.15;
+            var minVal = Math.min.apply(null, allVals.concat([0]));
+            if (minVal > 0) minVal = 0;           // always include zero baseline
+            minVal = minVal * 1.15;                // add a little padding below
+            var range  = maxVal - minVal;
+            var chartW = W - pad.left - pad.right;
+            var chartH = H - pad.top  - pad.bottom;
 
-            // Grid
-            const gridN = 5;
-            for (let i = 0; i <= gridN; i++) {
-                const y = pad.top + (chartH / gridN) * i;
-                ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-                ctx.lineWidth = 1;
-                ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
-                const val = maxVal - (maxVal / gridN) * i;
-                ctx.fillStyle = 'rgba(148,163,184,0.7)';
-                ctx.font = '11px Inter';
-                ctx.textAlign = 'right';
-                ctx.fillText(fmtK(val), pad.left - 8, y + 4);
+            // helper: convert a data value to a Y pixel position
+            function valToY(v) {
+                return pad.top + chartH - ((v - minVal) / range) * chartH;
             }
 
-            // X labels
-            const step = Math.ceil(labels.length / 12);
-            labels.forEach((label, i) => {
+            var zeroY = valToY(0);
+            var hasNegative = minVal < 0;
+
+            // ── GRID LINES + Y-AXIS LABELS ──
+            var gridN = 6;
+            for (var i = 0; i <= gridN; i++) {
+                var gridVal = maxVal - (range / gridN) * i;
+                var gy = valToY(gridVal);
+                var isNeg = gridVal < -0.01;
+
+                ctx.strokeStyle = isNeg ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.06)';
+                ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(W - pad.right, gy); ctx.stroke();
+
+                ctx.fillStyle = isNeg ? 'rgba(239,68,68,0.85)' : 'rgba(148,163,184,0.7)';
+                ctx.font = '11px Inter';
+                ctx.textAlign = 'right';
+                ctx.fillText(fmtK(gridVal), pad.left - 8, gy + 4);
+            }
+
+            // ── ZERO BASELINE (dashed red line when negatives exist) ──
+            if (hasNegative) {
+                ctx.save();
+                ctx.strokeStyle = 'rgba(239,68,68,0.55)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([6, 4]);
+                ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(W - pad.right, zeroY); ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = 'rgba(239,68,68,0.8)';
+                ctx.font = 'bold 10px Inter';
+                ctx.textAlign = 'right';
+                ctx.fillText('$0', pad.left - 8, zeroY + 4);
+                ctx.restore();
+            }
+
+            // ── X-AXIS LABELS ──
+            var step = Math.ceil(labels.length / 12);
+            labels.forEach(function(label, i) {
                 if (i % step !== 0 && i !== labels.length - 1) return;
-                const x = pad.left + (chartW / (labels.length - 1)) * i;
+                var x = pad.left + (chartW / (labels.length - 1)) * i;
                 ctx.fillStyle = 'rgba(148,163,184,0.7)';
                 ctx.font = '11px Inter';
                 ctx.textAlign = 'center';
@@ -1594,49 +1650,63 @@
                 ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, H - pad.bottom); ctx.stroke();
             });
 
-            // Datasets
-            datasets.forEach(dataset => {
-                const pts = dataset.data.map((val, i) => ({
-                    x: pad.left + (chartW / (dataset.data.length - 1)) * i,
-                    y: pad.top + chartH - (val / maxVal) * chartH
-                }));
+            // ── DATASETS ──
+            datasets.forEach(function(dataset) {
+                var data = dataset.data;
+                var pts  = data.map(function(val, i) {
+                    return {
+                        x: pad.left + (chartW / (data.length - 1)) * i,
+                        y: valToY(val)
+                    };
+                });
 
-                // Gradient fill
-                const grad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
-                const base = dataset.color;
-                grad.addColorStop(0, base + '33');
-                grad.addColorStop(1, base + '00');
+                // gradient fill — red tint below zero
+                var grad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
+                if (hasNegative) {
+                    var zeroStop = Math.max(0, Math.min(1, (maxVal / range)));
+                    grad.addColorStop(0,        dataset.color + '33');
+                    grad.addColorStop(zeroStop, dataset.color + '11');
+                    grad.addColorStop(zeroStop, 'rgba(239,68,68,0.18)');
+                    grad.addColorStop(1,        'rgba(239,68,68,0.04)');
+                } else {
+                    grad.addColorStop(0, dataset.color + '33');
+                    grad.addColorStop(1, dataset.color + '00');
+                }
 
-                // Fill path
+                // fill area under curve
                 ctx.beginPath();
                 ctx.moveTo(pts[0].x, pts[0].y);
-                for (let i = 1; i < pts.length; i++) {
-                    const cpx = (pts[i - 1].x + pts[i].x) / 2;
-                    ctx.bezierCurveTo(cpx, pts[i - 1].y, cpx, pts[i].y, pts[i].x, pts[i].y);
+                for (var i = 1; i < pts.length; i++) {
+                    var cpx = (pts[i-1].x + pts[i].x) / 2;
+                    ctx.bezierCurveTo(cpx, pts[i-1].y, cpx, pts[i].y, pts[i].x, pts[i].y);
                 }
-                ctx.lineTo(pts[pts.length - 1].x, H - pad.bottom);
-                ctx.lineTo(pts[0].x, H - pad.bottom);
+                ctx.lineTo(pts[pts.length-1].x, zeroY);
+                ctx.lineTo(pts[0].x, zeroY);
                 ctx.closePath();
                 ctx.fillStyle = grad;
                 ctx.fill();
 
-                // Line
-                ctx.beginPath();
-                ctx.moveTo(pts[0].x, pts[0].y);
-                for (let i = 1; i < pts.length; i++) {
-                    const cpx = (pts[i - 1].x + pts[i].x) / 2;
-                    ctx.bezierCurveTo(cpx, pts[i - 1].y, cpx, pts[i].y, pts[i].x, pts[i].y);
+                // draw line segment by segment — red when both points are negative
+                for (var i = 1; i < pts.length; i++) {
+                    var prevNeg = data[i-1] < 0;
+                    var currNeg = data[i]   < 0;
+                    var segColor = (prevNeg || currNeg) ? '#ef4444' : dataset.color;
+                    var cpx = (pts[i-1].x + pts[i].x) / 2;
+                    ctx.beginPath();
+                    ctx.moveTo(pts[i-1].x, pts[i-1].y);
+                    ctx.bezierCurveTo(cpx, pts[i-1].y, cpx, pts[i].y, pts[i].x, pts[i].y);
+                    ctx.strokeStyle = segColor;
+                    ctx.lineWidth = dataset.width || 2.5;
+                    ctx.stroke();
                 }
-                ctx.strokeStyle = dataset.color;
-                ctx.lineWidth = dataset.width || 2.5;
-                ctx.stroke();
 
-                // Dots
+                // dots
                 if (dataset.dots !== false) {
-                    pts.forEach((pt, i) => {
+                    pts.forEach(function(pt, i) {
                         if (i % step === 0 || i === pts.length - 1) {
+                            var dotColor = data[i] < 0 ? '#ef4444' : dataset.color;
                             ctx.beginPath(); ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-                            ctx.fillStyle = dataset.color; ctx.fill();
+                            ctx.fillStyle = dotColor; ctx.fill();
                             ctx.strokeStyle = '#070710'; ctx.lineWidth = 2; ctx.stroke();
                         }
                     });
@@ -1667,8 +1737,6 @@
             }
             return arr;
         }
-
-        const GEMINI_API_KEY = "AIzaSyDo3yllviTdr-gBOajJ5OwABuntMiGe3nw";
 
             async function runSimulation(mode) {
             let r0 = 0, growthRate = 0.1, label = '', cost = 0;
@@ -1752,50 +1820,67 @@ setTimeout(() => {
         if (dSims) dSims.textContent = runCount;
         }
 
-        async function runAISimulation() {
-            const aiBox = document.getElementById('aiInsightBox');
-            if (!aiBox) return;
-            aiBox.style.display = 'block';
-            aiBox.innerHTML = `
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                    <span style="font-size:1.2rem;">🤖</span>
-                    <span style="font-weight:700;color:white;">AI Analysis</span>
-                    <span style="font-size:.75rem;color:var(--td);">powered by Gemini</span>
+       // ── Gemini AI (free, no CORS issues) ──────────────
+       // Get your free key at https://aistudio.google.com/apikey
+// Paste it below OR store it in a <meta name="gemini-key"> tag
+var GEMINI_API_KEY = (function() {
+    var stored = localStorage.getItem('vl_gemini_key');
+    if (stored) return stored;
+    var meta = document.querySelector('meta[name="gemini-key"]');
+    return meta ? meta.getAttribute('content') : '';
+})();// get free key at aistudio.google.com/apikey
+
+        async function askGroq(prompt, boxId) {
+    var box = document.getElementById(boxId);
+    if (!box) return;
+    if (!GEMINI_API_KEY) {
+        box.style.display = 'block';
+        box.innerHTML = '<div style="color:var(--td);font-size:.85rem;padding:12px;">⚠️ Add your Gemini API key in Settings to enable AI insights.</div>';
+        return;
+    }
+    box.style.display = 'block';
+            box.innerHTML = `
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                    <span style="font-size:1.1rem;">🤖</span>
+                    <span style="font-weight:700;color:white;font-size:.95rem;">AI Insight</span>
+                    <span style="font-size:.72rem;color:var(--td);opacity:.7;">powered by Gemini</span>
                 </div>
-                <div id="aiInsightText" style="color:var(--td);font-size:.9rem;line-height:1.7;">
-                    <span style="opacity:.6;">Analyzing your simulation data...</span>
-                    <span class="ai-cursor">▋</span>
+                <div id="${boxId}-text" style="color:var(--td);font-size:.88rem;line-height:1.75;">
+                    <span style="opacity:.5;">Analyzing...</span> <span style="animation:blink 1s infinite;display:inline-block;color:var(--p);">▋</span>
                 </div>`;
-
-            const d = simData;
-            const prompt = `You are a business growth strategist. A user ran a ${d.mode} simulation with these results:
-- Mode: ${d.mode} (${d.label})
-- Starting Revenue: $${Math.round(d.r0).toLocaleString()}
-- Month 1 Revenue (base): $${Math.round(d.base[0]).toLocaleString()}
-- Month 12 Revenue (base): $${Math.round(d.base[11]).toLocaleString()}
-- Month 12 Revenue (optimistic): $${Math.round(d.opti[11]).toLocaleString()}
-- Month 12 Revenue (pessimistic): $${Math.round(d.pess[11]).toLocaleString()}
-- Monthly Growth Rate: ${(d.growthRate * 100).toFixed(1)}%
-- Monthly Cost: $${Math.round(d.cost).toLocaleString()}
-- 12-Month Total Revenue (base): $${Math.round(d.base.reduce((a,b)=>a+b,0)).toLocaleString()}
-
-Give a short, sharp 3-4 sentence analysis of these results. Highlight the biggest opportunity and one risk to watch. Be direct, no fluff.`;
-
             try {
-                const res = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDo3yllviTdr-gBOajJ5OwABuntMiGe3nw`,
+                var res = await fetch(
+                    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
+                        })
                     }
                 );
-                const data = await res.json();
-                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
-                document.getElementById('aiInsightText').innerHTML = text.replace(/\n/g, '<br>');
+                var data = await res.json();
+                var text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
+                document.getElementById(boxId + '-text').innerHTML = text.replace(/\n/g, '<br>');
             } catch (e) {
-                document.getElementById('aiInsightText').innerHTML = '⚠️ Could not reach Gemini API. Check your API key or internet connection.';
+                document.getElementById(boxId + '-text').innerHTML = '⚠️ Could not reach Gemini API. Check your connection.';
             }
+        }
+        // ──────────────────────────────────────────────────
+
+        // Called after every simulation — sends data to Claude for AI insight
+        async function runAISimulation() {
+            var d = simData;
+            var prompt = 'You are a business growth strategist. Analyze these simulation results in 3-4 sentences. Be direct, highlight the biggest opportunity and one key risk.\n' +
+                'Mode: ' + d.mode + ' (' + d.label + ')\n' +
+                'Starting Revenue: $' + Math.round(d.r0).toLocaleString() + '\n' +
+                'Month 12 Revenue (base): $' + Math.round(d.base[11]).toLocaleString() + '\n' +
+                'Month 12 Revenue (optimistic): $' + Math.round(d.opti[11]).toLocaleString() + '\n' +
+                'Month 12 Revenue (pessimistic): $' + Math.round(d.pess[11]).toLocaleString() + '\n' +
+                'Monthly Cost: $' + Math.round(d.cost).toLocaleString() + '\n' +
+                'Growth Rate: ' + (d.growthRate * 100).toFixed(1) + '%';
+            askGroq(prompt, 'aiInsightBox');
         }
 
         // function renderSimResults() {
@@ -1993,6 +2078,21 @@ Give a short, sharp 3-4 sentence analysis of these results. Highlight the bigges
             var runCount = localStorage.getItem('vl_sim_count') || '0';
             var dSims = document.getElementById('d-sims');
             if (dSims) dSims.textContent = runCount;
+
+            // AI analysis of analytics data
+            if (trackerMonths.length > 0) {
+                var last   = trackerMonths[trackerMonths.length - 1];
+                var profit = last.revenue - last.cost;
+                var total  = trackerMonths.reduce(function(s, m) { return s + m.revenue; }, 0);
+                var analyticsPrompt = 'You are a business analyst. Analyze this business data in 3-4 sentences. Highlight trends, biggest opportunity and one risk.\n' +
+                    'Months tracked: ' + trackerMonths.length + '\n' +
+                    'Latest month: ' + last.month + '\n' +
+                    'Latest Revenue: $' + Math.round(last.revenue).toLocaleString() + '\n' +
+                    'Latest Cost: $' + Math.round(last.cost).toLocaleString() + '\n' +
+                    'Latest Profit: $' + Math.round(profit).toLocaleString() + '\n' +
+                    'Total Revenue so far: $' + Math.round(total).toLocaleString();
+                if (currentPage === 'analytics') askGroq(analyticsPrompt, 'analyticsAIBox');
+            }
 
             showToast('Analytics data saved! 💾');
         }
@@ -2228,9 +2328,13 @@ Give a short, sharp 3-4 sentence analysis of these results. Highlight the bigges
             document.getElementById('d-sims').textContent = localStorage.getItem('vl_sim_count') || '0';
 
             // Dashboard chart
-const canvas = document.getElementById('dashChart');
-const emptyState = document.getElementById('dashChartEmpty');
-const legend = document.getElementById('dashChartLegend');
+var canvas = document.getElementById('dashChart');
+var emptyState = document.getElementById('dashChartEmpty');
+var legend = document.getElementById('dashChartLegend');
+if (canvas) {
+    canvas.style.width = '100%';
+    canvas.style.height = '320px';
+}
 if (months.length > 1) {
     canvas.style.display = 'block';
     emptyState.style.display = 'none';
