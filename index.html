@@ -324,7 +324,6 @@
                                     <div class="mini-metric-label">Industry Sector</div>
                                 </div>
                             </div>
-                            <!-- <button class="btn btn-primary" style="width:100%;margin-top:18px;padding:12px">⚡ Run AI Simulation</button> -->
                         </div>
                         <div class="s3d-float-badge" style="bottom:-18px;right:-10px">✅ Under 60 seconds</div>
                     </div>
@@ -556,7 +555,6 @@
             </div>
         </section>
 
-        <!-- FINAL CTA -->
         <section class="final-cta-section">
             <h2>Ready to find your<br>hidden revenue?</h2>
             <p>Run your first AI simulation in 60 seconds. Free forever, no credit card needed.</p>
@@ -573,8 +571,8 @@
 
 
     <!-- ══════════════════════════════════════
-     PAGE: SIMULATION
-══════════════════════════════════════ -->
+                    PAGE: SIMULATION
+         ══════════════════════════════════════ -->
     <div id="page-simulation" class="page">
         <div class="page-hero">
             <span class="badge"
@@ -604,10 +602,8 @@
                                 placeholder="e.g. Small business owners"></div>
                     </div>
                     <div class="form-row">
-                        <div class="input-group"><label>Monthly Budget ($)</label><input type="number" id="su-budget"
-                                value="5000" min="100"></div>
-                        <div class="input-group"><label>Expected ARPU ($/user)</label><input type="number" id="su-arpu"
-                                value="25" min="1"></div>
+                        <div class="input-group"><label>Monthly Budget ($)</label><input type="number" id="su-budget" placeholder="e.g. 5000" min="100"></div>
+                        <div class="input-group"><label>Expected ARPU ($/user)</label><input type="number" id="su-arpu" placeholder="e.g. 25" min="1"></div>
                     </div>
                     <div class="input-group" style="margin-bottom:20px;"><label>Industry / Sector</label>
                         <select id="su-industry">
@@ -642,14 +638,11 @@
                                 <option>Twitter/X</option>
                             </select>
                         </div>
-                        <div class="input-group"><label>Current Audience Size</label><input type="number"
-                                id="cr-audience" value="10000" min="100"></div>
+                        <div class="input-group"><label>Current Audience Size</label><input type="number" id="cr-audience" placeholder="e.g. 10000" min="100"></div>
                     </div>
                     <div class="form-row">
-                        <div class="input-group"><label>Engagement Rate (%)</label><input type="number" id="cr-engage"
-                                value="4" min="0.1" max="100" step="0.1"></div>
-                        <div class="input-group"><label>Product/Course Price ($)</label><input type="number"
-                                id="cr-price" value="97" min="1"></div>
+                        <div class="input-group"><label>Engagement Rate (%)</label><input type="number" id="cr-engage" placeholder="e.g. 4" min="0.1" max="100" step="0.1"></div>
+                        <div class="input-group"><label>Product/Course Price ($)</label><input type="number" id="cr-price" placeholder="e.g. 97" min="1"></div>
                     </div>
                     <div class="input-group" style="margin-bottom:20px;"><label>Primary Monetization</label>
                         <select id="cr-mono">
@@ -672,16 +665,12 @@
                 <div class="sim-card glass">
                     <h3 style="font-family:'Sora';font-size:1.5rem;margin-bottom:24px;">🛒 E-commerce Mode</h3>
                     <div class="form-row">
-                        <div class="input-group"><label>Monthly Visitors</label><input type="number" id="ec-visitors"
-                                value="50000" min="100"></div>
-                        <div class="input-group"><label>Conversion Rate (%)</label><input type="number" id="ec-conv"
-                                value="2.5" min="0.1" max="100" step="0.1"></div>
+                        <div class="input-group"><label>Monthly Visitors</label><input type="number" id="ec-visitors" placeholder="e.g. 50000" min="100"></div>
+                        <div class="input-group"><label>Conversion Rate (%)</label><input type="number" id="ec-conv" placeholder="e.g. 2.5" min="0.1" max="100" step="0.1"></div>
                     </div>
                     <div class="form-row">
-                        <div class="input-group"><label>Avg Order Value ($)</label><input type="number" id="ec-aov"
-                                value="75" min="1"></div>
-                        <div class="input-group"><label>Monthly Ad Spend ($)</label><input type="number" id="ec-adspend"
-                                value="5000" min="0"></div>
+                        <div class="input-group"><label>Avg Order Value ($)</label><input type="number" id="ec-aov" placeholder="e.g. 75" min="1"></div>
+                        <div class="input-group"><label>Monthly Ad Spend ($)</label><input type="number" id="ec-adspend" placeholder="e.g. 5000" min="0"></div>
                     </div>
                     <div class="input-group" style="margin-bottom:20px;"><label>Store Category</label>
                         <select id="ec-cat">
@@ -705,20 +694,15 @@
                 <div class="sim-card glass">
                     <h3 style="font-family:'Sora';font-size:1.5rem;margin-bottom:24px;">🤖 SaaS Mode</h3>
                     <div class="form-row">
-                        <div class="input-group"><label>Current Active Users</label><input type="number" id="sa-users"
-                                value="1200" min="1"></div>
-                        <div class="input-group"><label>Monthly Churn Rate (%)</label><input type="number" id="sa-churn"
-                                value="5" min="0.1" max="100" step="0.1"></div>
+                        <div class="input-group"><label>Current Active Users</label><input type="number" id="sa-users" placeholder="e.g. 1200" min="1"></div>
+                        <div class="input-group"><label>Monthly Churn Rate (%)</label><input type="number" id="sa-churn" placeholder="e.g. 5" min="0.1" max="100" step="0.1"></div>
                     </div>
                     <div class="form-row">
-                        <div class="input-group"><label>Subscription Price ($/mo)</label><input type="number"
-                                id="sa-price" value="29" min="1"></div>
-                        <div class="input-group"><label>Monthly New Trials</label><input type="number" id="sa-trials"
-                                value="200" min="0"></div>
+                        <div class="input-group"><label>Subscription Price ($/mo)</label><input type="number" id="sa-price" placeholder="e.g. 29" min="1"></div>
+                        <div class="input-group"><label>Monthly New Trials</label><input type="number" id="sa-trials" placeholder="e.g. 200" min="0"></div>
                     </div>
                     <div class="form-row">
-                        <div class="input-group"><label>Trial-to-Paid Rate (%)</label><input type="number"
-                                id="sa-trialconv" value="25" min="0.1" max="100" step="1"></div>
+                        <div class="input-group"><label>Trial-to-Paid Rate (%)</label><input type="number" id="sa-trialconv" placeholder="e.g. 25" min="0.1" max="100" step="1"></div>
                         <div class="input-group"><label>Billing Type</label><select id="sa-billing">
                                 <option>Monthly</option>
                                 <option>Annual</option>
@@ -734,7 +718,6 @@
 
             <!-- SIMULATION RESULTS -->
             <div class="sim-results" id="simResults">
-            <!-- Claude AI simulation insight loads here after running a simulation -->
             <div id="aiInsightBox" style="display:none;margin-bottom:24px;padding:24px 28px;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:18px;"></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
                     <h2 style="font-family:'Sora';font-size:1.5rem;">📊 Simulation Results</h2>
@@ -826,11 +809,10 @@
 
 
     <!-- ══════════════════════════════════════
-     PAGE: ANALYTICS
-══════════════════════════════════════ -->
+                     PAGE: ANALYTICS
+         ══════════════════════════════════════ -->
     <div id="page-analytics" class="page">
         <div id="analyticsAIBox" style="display:none;margin:24px 24px 0;padding:22px 24px;background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:16px;">
-            <!-- Claude AI analytics insight loads here -->
         </div>
         <div class="page-hero">
             <span class="badge"
@@ -1029,8 +1011,8 @@
 
 
     <!-- ══════════════════════════════════════
-     PAGE: DASHBOARD
-══════════════════════════════════════ -->
+                    PAGE: DASHBOARD
+        ══════════════════════════════════════ -->
     <div id="page-dashboard" class="page">
         <div class="dash-hero">
             <div class="dash-welcome" id="dashWelcome">Welcome back 👋</div>
@@ -1100,8 +1082,8 @@
 
 
     <!-- ══════════════════════════════════════
-     PAGE: FEATURES
-══════════════════════════════════════ -->
+                    PAGE: FEATURES
+         ══════════════════════════════════════ -->
     <div id="page-features" class="page">
         <div class="page-hero">
             <span class="badge"
@@ -1182,8 +1164,8 @@
 
 
     <!-- ══════════════════════════════════════
-     PAGE: ABOUT
-══════════════════════════════════════ -->
+                    PAGE: ABOUT
+        ══════════════════════════════════════ -->
     <div id="page-about" class="page">
         <div class="page-hero">
             <span class="badge"
@@ -1250,8 +1232,8 @@
 
 
     <!-- ══════════════════════════════════════
-     PAGE: CONTACT
-══════════════════════════════════════ -->
+                     PAGE: CONTACT
+        ══════════════════════════════════════ -->
     <div id="page-contact" class="page">
         <div class="page-hero">
             <span class="badge"
@@ -1316,8 +1298,8 @@
     </div>
 
     <!-- ══════════════════════════════════════
-     PAGE: PAYMENT
-══════════════════════════════════════ -->
+                PAGE: PAYMENT
+        ═════════════════════════════════════ -->
 <div id="page-payment" class="page">
     <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;text-align:center;padding:40px;">
         <div style="font-size:4rem;">🔒</div>
@@ -1329,8 +1311,8 @@
 </div>
 
     <!-- ══════════════════════════════════════
-     PAGE: AUTH
-══════════════════════════════════════ -->
+                         PAGE: AUTH
+        ══════════════════════════════════════ -->
     <div id="page-auth" class="page"
         style="min-height:100vh;align-items:center;justify-content:center;padding:120px 20px 60px;">
         <div class="auth-card glass">
@@ -1365,7 +1347,7 @@
 
     <script>
         // ══════════════════════════════════════════════
-        // GLOBALS
+        //                  GLOBALS
         // ══════════════════════════════════════════════
         const PAGES = ['home', 'simulation', 'analytics', 'dashboard', 'features', 'about', 'contact', 'auth', 'payment'];
         let currentPage = 'home';
@@ -1374,7 +1356,7 @@
         let simData = null;
 
         // ══════════════════════════════════════════════
-        // ROUTING
+        //                  ROUTING
         // ══════════════════════════════════════════════
         function spawnNavBubble(x, y) {
             const size = 120 + Math.random() * 60;
@@ -1435,7 +1417,7 @@
         }
 
         // ══════════════════════════════════════════════
-        // AUTH
+        //                    AUTH
         // ══════════════════════════════════════════════
         function checkAuth() { try { return JSON.parse(localStorage.getItem('vl_session')); } catch { return null; } }
         function setAuth(user) { localStorage.setItem('vl_session', JSON.stringify(user)); updateNavAuth(); }
