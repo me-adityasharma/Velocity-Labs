@@ -1474,38 +1474,74 @@
             document.getElementById('loginForm').classList.toggle('active', isLogin);
             document.getElementById('signupForm').classList.toggle('active', !isLogin);
         }
-        async function doLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass = document.getElementById('loginPassword').value;
-    const err = document.getElementById('loginError');
-    err.classList.remove('visible');
-    if (!email || !pass) { err.textContent = 'Please fill in all fields.'; err.classList.add('visible'); return; }
-    const hashed = await hashPassword(pass);
-    const users = JSON.parse(localStorage.getItem('vl_users') || '[]');
-    const match = users.find(u => u.email === email && u.password === hashed);
-    if (!match) { err.textContent = 'Invalid email or password.'; err.classList.add('visible'); return; }
-            setAuth({ email: match.email, name: match.name });
+        function doLogin() {
+            var email = document.getElementById('loginEmail').value.trim();
+            var pass  = document.getElementById('loginPassword').value;
+            var err   = document.getElementById('loginError');
+            err.classList.remove('visible');
+
+            if (!email || !pass) {
+                err.textContent = 'Please fill in all fields.';
+                err.classList.add('visible');
+                return;
+            }
+
+            var users = JSON.parse(localStorage.getItem('vl_users') || '[]');
+            var match = null;
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].email === email && users[i].password === pass) {
+                    match = users[i];
+                    break;
+                }
+            }
+
+            if (!match) {
+                err.textContent = 'Invalid email or password.';
+                err.classList.add('visible');
+                return;
+            }
+
+            setAuth({ email: match.email, name: match.name, plan: match.plan || 'free' });
             showToast('Welcome back, ' + (match.name || match.email.split('@')[0]) + '! 🚀');
             navigate('dashboard');
         }
-        async function doSignup() {
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const pass = document.getElementById('signupPassword').value;
-            const err = document.getElementById('signupError');
+
+        function doSignup() {
+            var name  = document.getElementById('signupName').value.trim();
+            var email = document.getElementById('signupEmail').value.trim();
+            var pass  = document.getElementById('signupPassword').value;
+            var err   = document.getElementById('signupError');
             err.classList.remove('visible');
-            if (!name || !email || !pass) { err.textContent = 'All fields are required.'; err.classList.add('visible'); return; }
-            if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.add('visible'); return; }
-            if (!/\S+@\S+\.\S+/.test(email)) { err.textContent = 'Please enter a valid email.'; err.classList.add('visible'); return; }
-            const users = JSON.parse(localStorage.getItem('vl_users') || '[]');
-            if (users.find(u => u.email === email)) { err.textContent = 'Email already registered.'; err.classList.add('visible'); return; }
-            // Simple hash using SubtleCrypto (built into every browser, no library needed)
-async function hashPassword(pass) {
-    const enc = new TextEncoder();
-    const buf = await crypto.subtle.digest('SHA-256', enc.encode(pass));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-            setAuth({ email, name });
+
+            if (!name || !email || !pass) {
+                err.textContent = 'All fields are required.';
+                err.classList.add('visible');
+                return;
+            }
+            if (pass.length < 6) {
+                err.textContent = 'Password must be at least 6 characters.';
+                err.classList.add('visible');
+                return;
+            }
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                err.textContent = 'Please enter a valid email.';
+                err.classList.add('visible');
+                return;
+            }
+
+            var users = JSON.parse(localStorage.getItem('vl_users') || '[]');
+
+            if (users.find(function(u) { return u.email === email; })) {
+                err.textContent = 'Email already registered.';
+                err.classList.add('visible');
+                return;
+            }
+
+            // Save new user
+            users.push({ name: name, email: email, password: pass, plan: 'free' });
+            localStorage.setItem('vl_users', JSON.stringify(users));
+
+            setAuth({ email: email, name: name, plan: 'free' });
             showToast('Account created! Welcome, ' + name + '! 🎉');
             navigate('dashboard');
         }
@@ -1820,54 +1856,54 @@ setTimeout(() => {
         if (dSims) dSims.textContent = runCount;
         }
 
-       // ── Gemini AI (free, no CORS issues) ──────────────
-       // Get your free key at https://aistudio.google.com/apikey
-// Paste it below OR store it in a <meta name="gemini-key"> tag
-var GEMINI_API_KEY = (function() {
-    var stored = localStorage.getItem('vl_gemini_key');
-    if (stored) return stored;
-    var meta = document.querySelector('meta[name="gemini-key"]');
-    return meta ? meta.getAttribute('content') : '';
-})();// get free key at aistudio.google.com/apikey
+//        // ── Gemini AI (free, no CORS issues) ──────────────
+//        // Get your free key at https://aistudio.google.com/apikey
+// // Paste it below OR store it in a <meta name="gemini-key"> tag
+// var GEMINI_API_KEY = (function() {
+//     var stored = localStorage.getItem('vl_gemini_key');
+//     if (stored) return stored;
+//     var meta = document.querySelector('meta[name="gemini-key"]');
+//     return meta ? meta.getAttribute('content') : '';
+// })();// get free key at aistudio.google.com/apikey
 
-        async function askGroq(prompt, boxId) {
-    var box = document.getElementById(boxId);
-    if (!box) return;
-    if (!GEMINI_API_KEY) {
-        box.style.display = 'block';
-        box.innerHTML = '<div style="color:var(--td);font-size:.85rem;padding:12px;">⚠️ Add your Gemini API key in Settings to enable AI insights.</div>';
-        return;
-    }
-    box.style.display = 'block';
-            box.innerHTML = `
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                    <span style="font-size:1.1rem;">🤖</span>
-                    <span style="font-weight:700;color:white;font-size:.95rem;">AI Insight</span>
-                    <span style="font-size:.72rem;color:var(--td);opacity:.7;">powered by Gemini</span>
-                </div>
-                <div id="${boxId}-text" style="color:var(--td);font-size:.88rem;line-height:1.75;">
-                    <span style="opacity:.5;">Analyzing...</span> <span style="animation:blink 1s infinite;display:inline-block;color:var(--p);">▋</span>
-                </div>`;
-            try {
-                var res = await fetch(
-                    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }],
-                            generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
-                        })
-                    }
-                );
-                var data = await res.json();
-                var text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
-                document.getElementById(boxId + '-text').innerHTML = text.replace(/\n/g, '<br>');
-            } catch (e) {
-                document.getElementById(boxId + '-text').innerHTML = '⚠️ Could not reach Gemini API. Check your connection.';
-            }
-        }
-        // ──────────────────────────────────────────────────
+//         async function askGroq(prompt, boxId) {
+//     var box = document.getElementById(boxId);
+//     if (!box) return;
+//     if (!GEMINI_API_KEY) {
+//         box.style.display = 'block';
+//         box.innerHTML = '<div style="color:var(--td);font-size:.85rem;padding:12px;">⚠️ Add your Gemini API key in Settings to enable AI insights.</div>';
+//         return;
+//     }
+//     box.style.display = 'block';
+//             box.innerHTML = `
+//                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+//                     <span style="font-size:1.1rem;">🤖</span>
+//                     <span style="font-weight:700;color:white;font-size:.95rem;">AI Insight</span>
+//                     <span style="font-size:.72rem;color:var(--td);opacity:.7;">powered by Gemini</span>
+//                 </div>
+//                 <div id="${boxId}-text" style="color:var(--td);font-size:.88rem;line-height:1.75;">
+//                     <span style="opacity:.5;">Analyzing...</span> <span style="animation:blink 1s infinite;display:inline-block;color:var(--p);">▋</span>
+//                 </div>`;
+//             try {
+//                 var res = await fetch(
+//                     'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY,
+//                     {
+//                         method: 'POST',
+//                         headers: { 'Content-Type': 'application/json' },
+//                         body: JSON.stringify({
+//                             contents: [{ parts: [{ text: prompt }] }],
+//                             generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
+//                         })
+//                     }
+//                 );
+//                 var data = await res.json();
+//                 var text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
+//                 document.getElementById(boxId + '-text').innerHTML = text.replace(/\n/g, '<br>');
+//             } catch (e) {
+//                 document.getElementById(boxId + '-text').innerHTML = '⚠️ Could not reach Gemini API. Check your connection.';
+//             }
+//         }
+//         // ──────────────────────────────────────────────────
 
         // Called after every simulation — sends data to Claude for AI insight
         async function runAISimulation() {
